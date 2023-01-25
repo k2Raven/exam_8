@@ -16,6 +16,16 @@ class DetailProductView(DetailView):
     model = Product
     template_name = 'product/detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = self.object.reviews.all()
+
+        if not self.request.user.has_perm('webapp.view_not_moderated_review'):
+            reviews = reviews.filter(is_moderated=True)
+
+        context['reviews'] = reviews.order_by('-edited_at')
+        return context
+
 
 class CreateProductView(CreateView):
     form_class = ProductForm

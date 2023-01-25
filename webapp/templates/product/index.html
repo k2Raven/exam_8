@@ -17,7 +17,7 @@
                         <img src="{% static "images/no_picture.jpg" %}" class="card-img-top">
                     {% endif %}
                     <div class="card-body">
-                        <h5 class="card-title">{{ product.name }}</h5>
+                        <h5 class="card-title">{{ product.name }} | <span>{{ product.get_avg }}</span></h5>
 
                         <a href="{% url 'webapp:product_detail' product.pk %}" class="btn btn-primary">Подробнее</a>
                     </div>

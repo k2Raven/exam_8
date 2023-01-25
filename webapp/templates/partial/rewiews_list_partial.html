@@ -1,0 +1,19 @@
+<h1 class="text-center">Отзывы</h1>
+<div class="row">
+
+    {% for review in reviews %}
+        <div class="col-sm-3">
+            <div class="card {% if not review.is_moderated %}text-bg-secondary{% endif %}">
+                <div class="card-header">
+                    {{ review.rating }} <span>{{ review.author.username }} | {{ review.author.email }} </span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ review.text }}</p>
+                    <a href="{% url 'webapp:review_update' review.pk %}" class="btn btn-primary">Изменить</a>
+                    <a href="{% url 'webapp:review_delete' review.pk %}" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>

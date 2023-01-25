@@ -12,6 +12,12 @@ class Product(models.Model):
     description = models.TextField(max_length=2000, null=True, blank=True, verbose_name='Описание')
     picture = models.ImageField(verbose_name='Картинка', upload_to='pictures', null=True, blank=True)
 
+    def get_avg(self):
+        result = self.reviews.filter(is_moderated=True).aggregate(avg=Avg('rating'))
+        if not result['avg']:
+            result['avg'] = 0
+        return result['avg']
+
     def __str__(self):
         return f"{self.name} - {self.category}"
 
@@ -25,6 +31,9 @@ class Review(models.Model):
     is_moderated = models.BooleanField(default=False, verbose_name='Подтвержден')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     edited_at = models.DateTimeField(auto_now=True, verbose_name='Дата редактирования')
+
+    class Meta:
+        permissions = [("view_not_moderated_review", "Видеть немодерированные отзывы")]
 
     def __str__(self):
         return f"{self.author.username} - {self.product.name}"
