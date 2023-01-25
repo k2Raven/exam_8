@@ -2,26 +2,32 @@
 {% load static %}
 
 {% block nav %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'webapp:product_update' product.pk %}">Изменить</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'webapp:product_delete' product.pk %}">Удалить</a>
-    </li>
+    {% if perms.webapp.change_product %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:product_update' product.pk %}">Изменить</a>
+        </li>
+    {% endif %}
+    {% if perms.webapp.delete_product %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'webapp:product_delete' product.pk %}">Удалить</a>
+        </li>
+    {% endif %}
+    {% if request.user.is_authenticated %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'webapp:review_create' product.pk %}">Оставить отзыв</a>
     </li>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="card m-3">
         <div class="row g-0">
             <div class="col-md-4">
-                    {% if product.picture %}
-                        <img src="{{ product.picture.url }}" class="card-img-top">
-                    {% else %}
-                        <img src="{% static "images/no_picture.jpg" %}" class="card-img-top">
-                    {% endif %}
+                {% if product.picture %}
+                    <img src="{{ product.picture.url }}" class="card-img-top">
+                {% else %}
+                    <img src="{% static "images/no_picture.jpg" %}" class="card-img-top">
+                {% endif %}
             </div>
             <div class="col-md-8">
                 <div class="card-body">

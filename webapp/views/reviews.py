@@ -1,12 +1,13 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from webapp.models import Review, Product
 from webapp.forms import UserReviewForm, ModeratorReviewForm
 
 
-class CreateReviewView(CreateView):
+class CreateReviewView(LoginRequiredMixin, CreateView):
     form_class = UserReviewForm
     model = Review
     template_name = 'review/create.html'
@@ -22,10 +23,14 @@ class CreateReviewView(CreateView):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.product.pk})
 
 
-class UpdateReviewView(UpdateView):
+class UpdateReviewView(PermissionRequiredMixin, UpdateView):
     form_class = UserReviewForm
     model = Review
     template_name = 'review/update.html'
+    permission_required = 'webapp.change_review'
+
+    def has_permission(self):
+        return super().has_permission() or self.get_object().author == self.request.user
 
     def get_form_class(self):
         if self.request.user.has_perm('webapp.change_review'):
@@ -41,9 +46,23 @@ class UpdateReviewView(UpdateView):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.product.pk})
 
 
-class DeleteReviewView(DeleteView):
+class DeleteReviewView(PermissionRequiredMixin, DeleteView):
     model = Review
     template_name = 'review/delete.html'
+    permission_required = 'webapp.delete_review'
+
+    def has_permission(self):
+        return super().has_permission() or self.get_object().author == self.request.user
 
     def get_success_url(self):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.product.pk})
+
+
+class ListNoModeratedReviewView(PermissionRequiredMixin, ListView):
+    model = Review
+    template_name = 'review/no_moderated.html'
+    context_object_name = 'reviews'
+    permission_required = 'webapp.view_not_moderated_review'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_moderated=False)

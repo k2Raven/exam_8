@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from webapp.models import Product
 from webapp.forms import ProductForm
@@ -27,25 +28,28 @@ class DetailProductView(DetailView):
         return context
 
 
-class CreateProductView(CreateView):
+class CreateProductView(PermissionRequiredMixin, CreateView):
     form_class = ProductForm
     model = Product
     template_name = 'product/create.html'
+    permission_required = 'webapp.add_profile'
 
     def get_success_url(self):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.pk})
 
 
-class UpdateProductView(UpdateView):
+class UpdateProductView(PermissionRequiredMixin, UpdateView):
     form_class = ProductForm
     model = Product
     template_name = 'product/update.html'
+    permission_required = 'webapp.change_profile'
 
     def get_success_url(self):
         return reverse('webapp:product_detail', kwargs={'pk': self.object.pk})
 
 
-class DeleteProductView(DeleteView):
+class DeleteProductView(PermissionRequiredMixin, DeleteView):
     model = Product
     template_name = 'product/delete.html'
     success_url = reverse_lazy('webapp:index')
+    permission_required = 'webapp.delete_profile'
