@@ -1,0 +1,70 @@
+[
+{
+  "model": "webapp.product",
+  "pk": 2,
+  "fields": {
+    "name": "test",
+    "category": "other",
+    "description": "qweeqweqweqweqwe",
+    "picture": "pictures/1552932077_1.jpg"
+  }
+},
+{
+  "model": "webapp.product",
+  "pk": 3,
+  "fields": {
+    "name": "Xiaomi2",
+    "category": "electronics",
+    "description": "йцуйцуйцуйц",
+    "picture": ""
+  }
+},
+{
+  "model": "webapp.review",
+  "pk": 1,
+  "fields": {
+    "author": 1,
+    "product": 2,
+    "text": "qwe qweqweqweqweqweqw",
+    "rating": 5,
+    "is_moderated": true,
+    "created_at": "2023-01-25T14:19:08.192Z",
+    "edited_at": "2023-01-25T14:19:08.192Z"
+  }
+},
+{
+  "model": "webapp.review",
+  "pk": 2,
+  "fields": {
+    "author": 1,
+    "product": 2,
+    "text": "12312312 ewqeqwewqeqw",
+    "rating": 4,
+    "is_moderated": true,
+    "created_at": "2023-01-25T14:19:19.978Z",
+    "edited_at": "2023-01-25T15:02:06.807Z"
+  }
+},
+{
+  "model": "webapp.review",
+  "pk": 4,
+  "fields": {
+    "author": 3,
+    "product": 2,
+    "text": "cewcewwe",
+    "rating": 3,
+    "is_moderated": false,
+    "created_at": "2023-01-25T15:12:17.006Z",
+    "edited_at": "2023-01-25T15:12:17.006Z"
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 1,
+  "fields": {
+    "user": 3,
+    "birth_date": null,
+    "avatar": ""
+  }
+}
+]
