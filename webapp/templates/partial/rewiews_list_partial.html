@@ -5,12 +5,18 @@
         <div class="col-sm-3">
             <div class="card {% if not review.is_moderated %}text-bg-secondary{% endif %}">
                 <div class="card-header">
-                    {{ review.rating }} <a href="{% url 'accounts:detail' review.author.pk %}">{{ review.author.username }} | {{ review.author.email }} </a>
+                    {{ review.rating }} <a
+                        href="{% url 'accounts:detail' review.author.pk %}">{{ review.author.username }}
+                    | {{ review.author.email }} </a>
                 </div>
                 <div class="card-body">
                     <p class="card-text">{{ review.text }}</p>
-                    <a href="{% url 'webapp:review_update' review.pk %}" class="btn btn-primary">Изменить</a>
-                    <a href="{% url 'webapp:review_delete' review.pk %}" class="btn btn-danger">Удалить</a>
+                    {% if review.author == request.user or perms.webapp.change_review %}
+                        <a href="{% url 'webapp:review_update' review.pk %}" class="btn btn-primary">Изменить</a>
+                    {% endif %}
+                    {% if review.author == request.user or perms.webapp.delete_review %}
+                        <a href="{% url 'webapp:review_delete' review.pk %}" class="btn btn-danger">Удалить</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
