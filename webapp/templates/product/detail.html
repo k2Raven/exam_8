@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block nav %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webapp:product_update' product.pk %}">Изменить</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'webapp:product_delete' product.pk %}">Удалить</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="card m-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                    {% if product.picture %}
+                        <img src="{{ product.picture.url }}" class="card-img-top">
+                    {% else %}
+                        <img src="{% static "images/no_picture.jpg" %}" class="card-img-top">
+                    {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text"><small class="text-muted">{{ product.category }}</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

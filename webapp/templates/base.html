@@ -23,6 +23,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% block nav %}{% endblock %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'webapp:product_create' %}">Добавить продукт</a>
+                </li>
 
             </ul>
 
