@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model,login,  update_session_auth_hash
+from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.views import PasswordChangeView
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -33,15 +33,20 @@ class RegisterView(CreateView):
         return reverse('webapp:index')
 
 
-class UserDetailView(LoginRequiredMixin, DetailView, MultipleObjectMixin):
+class UserDetailView(DetailView):
     model = get_user_model()
     template_name = 'user_detail.html'
     context_object_name = 'user_obj'
-    paginate_by = 3
 
     def get_context_data(self, **kwargs):
-        articles = self.get_object().articles.all()
-        return super().get_context_data(object_list=articles, **kwargs)
+        context = super().get_context_data(**kwargs)
+        reviews = self.object.reviews.all()
+
+        if not self.request.user.has_perm('webapp.view_not_moderated_review') and self.object != self.request.user:
+            reviews = reviews.filter(is_moderated=True)
+
+        context['reviews'] = reviews.order_by('-edited_at')
+        return context
 
 
 class UserChangeView(LoginRequiredMixin, UpdateView):
@@ -82,24 +87,6 @@ class UserChangeView(LoginRequiredMixin, UpdateView):
         return reverse('accounts:detail', kwargs={'pk': self.get_object().pk})
 
 
-# class UserPasswordChangeView(UpdateView):
-#     model = get_user_model()
-#     template_name = 'user_password_change.html'
-#     context_object_name = 'oser_obj'
-#     form_class = PasswordChangeForm
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user
-#
-#     def form_valid(self, form):
-#         user = form.save()
-#         update_session_auth_hash(self.request, user)
-#         return redirect(self.get_success_url())
-#
-#
-#
-#     def get_success_url(self):
-#         return reverse('accounts:detail', kwargs={'pk': self.get_object().pk})
 class UserPasswordChangeView(PasswordChangeView):
     template_name = 'user_password_change.html'
 
